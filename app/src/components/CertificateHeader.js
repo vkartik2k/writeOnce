@@ -24,35 +24,21 @@ const styles = {
     round: {
         borderRadius : '50%'
     },
-    search : {
-        border: '0px',
-        padding: '10px',
-        fontSize: '19px',
-        minWidth: '500px',
-        borderRadius: '10px',
-        paddingLeft: '50px',
-        marginLeft: '-20px',
-        backgroundColor: 'white',
-    },
-    searchImg: {
-        position: 'relative',
-        left:'13px'
+    title: {
+        fontSize: '22px',
+        fontWeight: '600'
     }
 }
 
-function MainHeader() {
+function CertificateHeader() {
     return (
         <div style={styles.container}>
             <div style={styles.logo}>
                 <img src="logo.png" alt="" height="45px"/>&nbsp;&nbsp;
                 <img src="logo_extended.svg" alt="" height="45px"/>
             </div>
-            <div>
-                <img src="search.png" alt="" width='15px' style={styles.searchImg}/>
-                <input 
-                    style={styles.search}
-                    placeholder="Search"
-                />
+            <div style={styles.title}>
+                Share Holder Certificate
             </div>
             <div style={styles.userAvatar}>
                 <img src="user_avatar.png" alt="" height="35px" style={styles.round}/>
@@ -61,4 +47,4 @@ function MainHeader() {
     )
 }
 
-export default MainHeader
+export default CertificateHeader

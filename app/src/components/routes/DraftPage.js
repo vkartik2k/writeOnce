@@ -1,6 +1,5 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import CertificateHeader from '../CertificateHeader'
-import Doc from '../Doc'
 
 const styles = {
     container: {
@@ -9,13 +8,13 @@ const styles = {
     }
 }
 
-function DigitalCertificate() {
+function DraftPage() {
     return (
         <div style={styles.container}>
             <CertificateHeader/>
-            <Doc/>
+            
         </div>
     )
 }
 
-export default DigitalCertificate
+export default DraftPage
