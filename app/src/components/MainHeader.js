@@ -1,4 +1,6 @@
-import React from 'react'
+import React, { useContext } from 'react'
+import { LoginContext, UserContext } from '../App'
+import GoogleLogin from './GoogleLogin'
 
 const styles = {
     container: {
@@ -14,12 +16,14 @@ const styles = {
         paddingLeft: '20px',
         paddingTop: '8px',
         paddingBottom: '5px',
-        width: '20%'
+        width: '30%'
     },
     userAvatar: {
         paddingRight: '20px',
-        width: '20%',
-        textAlign: 'right'
+        width: '30%',
+        textAlign: 'right',
+        display:'flex',
+        justifyContent: 'right'
     },
     round: {
         borderRadius : '50%'
@@ -41,6 +45,9 @@ const styles = {
 }
 
 function MainHeader() {
+    const user = useContext(UserContext);
+    const loginMethod = useContext(LoginContext); 
+
     return (
         <div style={styles.container}>
             <div style={styles.logo}>
@@ -55,7 +62,7 @@ function MainHeader() {
                 />
             </div>
             <div style={styles.userAvatar}>
-                <img src="user_avatar.png" alt="" height="35px" style={styles.round}/>
+                <GoogleLogin user={user} logIn={loginMethod.logIn} logOut={loginMethod.logOut}/>
             </div>
         </div>
     )
