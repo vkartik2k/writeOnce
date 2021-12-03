@@ -8,7 +8,8 @@ const styles = {
         backgroundColor: '#EFEFEF',
         position: 'sticky',
         top: '0px',
-        width: '100%'
+        width: '100%',
+        zIndex: '100'
     },
     logo: {
         paddingLeft: '20px',
