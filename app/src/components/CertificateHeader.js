@@ -3,6 +3,7 @@ import { LoginContext, UserContext } from '../App'
 import GoogleLogin from './GoogleLogin';
 import logo from '../assets/logo.png'
 import logo_extended from '../assets/logo_extended.svg'
+import { Link } from 'react-router-dom';
 
 const styles = {
     container: {
@@ -44,8 +45,10 @@ function CertificateHeader({title, changeTitle}) {
     return (
         <div style={styles.container}>
             <div style={styles.logo}>
-                <img src={logo} alt="Hey" height="45px"/>&nbsp;&nbsp;
-                <img src={logo_extended} alt="" height="45px"/>
+                <Link to="/dashboard">
+                    <img src={logo} alt="Hey" height="45px"/>&nbsp;&nbsp;
+                    <img src={logo_extended} alt="" height="45px"/>
+                </Link>
             </div>
             <div style={styles.title}>
                 {title}

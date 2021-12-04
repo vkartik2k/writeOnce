@@ -82,11 +82,14 @@ function DraftPage(props) {
     useEffect(()=> {
         setIsValid(false);
         const docRef = doc(db, 'drafts', params.id);
+        
+        const startTime = Date.now()
         getDoc(docRef).then(docSnap => {
             if(docSnap.exists()) {
                 setTitle(docSnap.data().title)
-                setValue(docSnap.data().title)
+                setValue(docSnap.data().text)
                 setIsValid(true)
+                console.log(Date.now()-startTime)
             }
             else {
                 console.log("No Such Draft Exists")
