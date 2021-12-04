@@ -42,7 +42,7 @@ const styles = {
     }
 }
 
-function DraftCard(props) {
+function DraftCard({title, text}) {
     const [hover, setHover] = useState(false)
 
     return (
@@ -52,7 +52,7 @@ function DraftCard(props) {
             onMouseLeave={()=>setHover(false)}
         >
             <div style={styles.upper}>
-                Hello world, the text from the certificate will come out over here
+                {text}
             </div>
             <div style={styles.lower}>
                 <div style={styles.imgContainer}>
@@ -60,7 +60,7 @@ function DraftCard(props) {
                 </div>
                 <div>
                     <div style={styles.titleText}>
-                        Draft - Share Holder Certificate
+                        Draft - {title}
                     </div>
                 </div>
             </div>

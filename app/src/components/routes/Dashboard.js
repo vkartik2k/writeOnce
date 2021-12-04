@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { db } from '../../firebase-config'
+import { doc, getDoc, setDoc } from "firebase/firestore"; 
 import MainHeader from '../MainHeader'
 import Notice from '../Notice'
 import NewDraft from '../NewDraft'
 import DraftCard from '../DraftCard'
 import CertificateCard from '../CertificateCard'
+import { UserContext } from '../../App';
 
 const styles = {
   main: {
@@ -27,6 +30,47 @@ const styles = {
 }
 
 function Dashboard() {
+  const [data, setData] = useState({});
+  const [loading, setLoading] = useState(true);
+  const user = useContext(UserContext);
+
+  const loadData = async () => {
+    setLoading(true);
+    const docRef = doc(db, 'profiles', user.uid);
+    
+    let docSnap = await getDoc(docRef);
+    if (docSnap.exists()) {
+      let currData = docSnap.data();
+      currData.draftData = []
+      currData.drafts.forEach(async (element, i) => {
+        let snap = await getDoc(element)
+        currData.draftData.push(snap.data())
+        if(i===currData.drafts.length - 1) {
+          setData(currData)
+          setLoading(false)
+        }
+      });
+    } else {
+      console.log("No such document!");
+      setDoc(docRef, {
+        drafts: [],
+        cerficates: [],
+        sharedDrafts: [],
+        sharedCertificates: []
+      }).then(() => {
+        console.log("Created profile for user")
+        loadData()
+      })
+    }
+  }
+
+  useEffect(() => {
+    if(user.uid) {
+      loadData()
+    }
+  }, [user])
+
+
   return (
     <div>
       <MainHeader/>
@@ -35,9 +79,7 @@ function Dashboard() {
         <span style={styles.title}>My Drafts</span>
         <div style={styles.flexContainer}>
           <NewDraft/>
-          <DraftCard/>
-          <DraftCard/>
-          <DraftCard/>
+          {!loading && data.draftData.map((draft, i) => (<DraftCard title={draft.title} text={draft.text} key={i}/>))}
         </div>
         <span style={styles.title}>My Digital Certificates</span>
         <div style={styles.flexContainer}>

@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import CertificateHeader from '../CertificateHeader'
+import { db } from '../../firebase-config'
+import { doc, getDoc, setDoc } from "firebase/firestore"; 
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
+import { useParams } from 'react-router';
 
 const styles = {
     container: {
@@ -16,7 +19,7 @@ const styles = {
         marginTop: '10px',
         boxShadow: '0px 2px 5px 2px rgba(0,0,0,0.36)',
         padding: '70px',
-        fontFamily: 'Courier New'
+        fontFamily: 'Courier New',
     },
     toolbar: {
         backgroundColor: '#EFEFEF',
@@ -48,11 +51,15 @@ const formats = [
     'bold', 'italic', 'underline', 'strike', 'blockquote',
     'list', 'bullet', 'indent',
     'link', 'image', 'video'
-  ]
+]
 
-function DraftPage() {
+function DraftPage(props) {
+    const [title, setTitle] = useState('');
     const [value, setValue] = useState('');
+    const [isValid, setIsValid] = useState('false');
+    const params = useParams();
 
+    // for Styling
     useEffect(()=> {
         document.getElementsByClassName('ql-container')[0].style.height = styles.editor.height
         document.getElementsByClassName('ql-container')[0].style.width = styles.editor.width
@@ -69,17 +76,27 @@ function DraftPage() {
         document.getElementsByClassName('ql-toolbar')[0].style.position = styles.toolbar.position
         document.getElementsByClassName('ql-toolbar')[0].style.top = styles.toolbar.top
         document.getElementsByClassName('ql-toolbar')[0].style.zIndex = styles.toolbar.zIndex
+    }, [])
 
-
-
-
-
-        
+    // for loading
+    useEffect(()=> {
+        setIsValid(false);
+        const docRef = doc(db, 'drafts', params.id);
+        getDoc(docRef).then(docSnap => {
+            if(docSnap.exists()) {
+                setTitle(docSnap.data().title)
+                setValue(docSnap.data().title)
+                setIsValid(true)
+            }
+            else {
+                console.log("No Such Draft Exists")
+            }
+        })
     }, [])
 
     return (
         <div style={styles.container}>
-            <CertificateHeader/>
+            <CertificateHeader title={title} changeTitle={setTitle}/>
             <ReactQuill 
                 theme="snow" 
                 value={value} 

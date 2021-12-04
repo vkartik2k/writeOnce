@@ -41,7 +41,6 @@ const styles = {
 function GoogleLogin({user, logIn, logOut}) {
     return (
         <div>
-            {console.log(user)}
             {user? (<div style={styles.flexContainer}>
                 <div>
                     <img src={user.photoURL} alt="" height="35px" style={styles.round}/>

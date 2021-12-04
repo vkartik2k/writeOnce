@@ -1,6 +1,8 @@
 import React, { useContext } from 'react'
 import { LoginContext, UserContext } from '../App'
 import GoogleLogin from './GoogleLogin'
+import logo from '../assets/logo.png'
+import logo_extended from '../assets/logo_extended.svg'
 
 const styles = {
     container: {
@@ -51,8 +53,8 @@ function MainHeader() {
     return (
         <div style={styles.container}>
             <div style={styles.logo}>
-                <img src="logo.png" alt="" height="45px"/>&nbsp;&nbsp;
-                <img src="logo_extended.svg" alt="" height="45px"/>
+                <img src={logo} alt="" height="45px"/>&nbsp;&nbsp;
+                <img src={logo_extended} alt="" height="45px"/>
             </div>
             <div>
                 <img src="search.png" alt="" width='15px' style={styles.searchImg}/>

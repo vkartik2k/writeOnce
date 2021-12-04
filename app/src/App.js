@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
-import { auth } from './firebase-config';
+import { auth} from './firebase-config';
 import { signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from '@firebase/auth';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate} from 'react-router-dom';
 import Dashboard from './components/routes/Dashboard'
 import DigitalCertificate from './components/routes/DigitalCertificate'
 import DraftPage from './components/routes/DraftPage'
+import LandingPage from './components/routes/LandingPage';
 
 const provider = new GoogleAuthProvider();
 export const UserContext = React.createContext();
@@ -12,7 +13,6 @@ export const LoginContext = React.createContext();
 
 function App() {
   const [user, setUser] = useState({});
-
   onAuthStateChanged(auth, (currentUser) => setUser(currentUser))
 
   let signInWithGoogle= () => {
@@ -32,9 +32,10 @@ function App() {
         <Router>
           <div className="App">
             <Routes>
-              <Route exact path='/' element={<Dashboard/>}></Route>
-              <Route exact path='/certificate' element={<DigitalCertificate/>}></Route>
-              <Route exact path='/draft' element={<DraftPage/>}></Route>
+              <Route exact path='/' element={<LandingPage/>}></Route>
+              <Route exact path='/dashboard' element={user? <Dashboard/>: <Navigate to="/"/> }></Route>
+              <Route exact path='/certificate' element={user? <DigitalCertificate/> :<Navigate to="/"/>}></Route>
+              <Route exact path='/draft/:id' element={<DraftPage/>}></Route>
             </Routes>
           </div>
         </Router>

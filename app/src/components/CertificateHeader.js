@@ -1,6 +1,8 @@
 import React, {useContext} from 'react'
 import { LoginContext, UserContext } from '../App'
 import GoogleLogin from './GoogleLogin';
+import logo from '../assets/logo.png'
+import logo_extended from '../assets/logo_extended.svg'
 
 const styles = {
     container: {
@@ -11,7 +13,7 @@ const styles = {
         position: 'sticky',
         top: '0px',
         width: '100%',
-        zIndex: '100'
+        zIndex: '100',
     },
     logo: {
         paddingLeft: '20px',
@@ -35,18 +37,18 @@ const styles = {
     }
 }
 
-function CertificateHeader() {
+function CertificateHeader({title, changeTitle}) {
     const user = useContext(UserContext);
     const loginMethod = useContext(LoginContext); 
 
     return (
         <div style={styles.container}>
             <div style={styles.logo}>
-                <img src="logo.png" alt="" height="45px"/>&nbsp;&nbsp;
-                <img src="logo_extended.svg" alt="" height="45px"/>
+                <img src={logo} alt="Hey" height="45px"/>&nbsp;&nbsp;
+                <img src={logo_extended} alt="" height="45px"/>
             </div>
             <div style={styles.title}>
-                Share Holder Certificate
+                {title}
             </div>
             <div style={styles.userAvatar}>
                 <GoogleLogin user={user} logIn={loginMethod.logIn} logOut={loginMethod.logOut}/>    
