@@ -53,7 +53,7 @@ function DraftCard({title, text}) {
             onMouseLeave={()=>setHover(false)}
         >
             <div style={styles.upper}>
-                {text.slice(0, 100) + (text&&"...")}
+                {text.replace( /(<([^>]+)>)/ig, '').slice(0, 100) + (text&&"...")}
             </div>
             <div style={styles.lower}>
                 <div style={styles.imgContainer}>

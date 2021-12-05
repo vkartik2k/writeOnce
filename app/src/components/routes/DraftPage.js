@@ -8,9 +8,9 @@ import DraftHeader from '../DraftHeader';
 import { UserContext } from '../../App';
 import Loading from '../Loading';
 import lock from '../../assets/lock.png'
-import ConvertDraftModal from '../modals/ConvertDraftModal';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import { Modal } from '@mui/material';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -58,6 +58,18 @@ const styles = {
         display: 'inline-block',
         paddingRight: '5px',
         paddingTop:'2px'
+    }, 
+    box: {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 400,
+        backgroundColor: 'white',
+        border: '0px',
+        padding: '20px',
+        zIndex: 100,
+        borderRadius: '10px'
     }
 }
 
@@ -91,7 +103,8 @@ function DraftPage(props) {
     const [isLoading, setIsLoading] = useState('true');
     const user= useContext(UserContext)
     const params = useParams();
-    const [open, setOpen] = useState(false);
+    const [snackOpen, setSnackOpen] = useState(false);
+    const [modalOpen, setModalOpen] = useState(false);
 
     // for Styling
     useEffect(()=> {
@@ -138,12 +151,11 @@ function DraftPage(props) {
         })
     }, [])
 
-    const handleClick = () => setOpen(true);
+    const handleClick = () => setSnackOpen(true);
 
-    
     const handleClose = (event, reason) => {
     if (reason === 'clickaway') return;
-    setOpen(false);
+        setSnackOpen(false);
     }
 
     const saveChanges = () => {
@@ -156,16 +168,14 @@ function DraftPage(props) {
             }).then(() => {
                 console.log('Changes saved!')
                 handleClick()
-
             })
         }
     }
 
     return (
         <div style={styles.container}>
-            {/* <ConvertDraftModal/> */}
             {isLoading && <Loading/>}
-            <div style={styles.mainBtn}> <img style={styles.lock} src={lock} alt="lock" height='15px'/>Generate Certificate</div>
+            <div style={styles.mainBtn} onClick={() => setModalOpen(true)}> <img style={styles.lock} src={lock} alt="lock" height='15px'/>Generate Certificate</div>
             <DraftHeader title={title} changeTitle={setTitle} saveChanges={saveChanges}/>
             <ReactQuill 
                 theme="snow" 
@@ -174,11 +184,22 @@ function DraftPage(props) {
                 modules={modules}
                 formats={formats}
             />
-            <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
+            <Snackbar open={snackOpen} autoHideDuration={4000} onClose={handleClose}>
                 <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
                     Changes saved on cloud!
                 </Alert>
             </Snackbar>
+
+            <Modal
+                open={modalOpen}
+                onClose={() => setModalOpen(false)}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <div style={styles.box}>
+                    Hello
+                </div>
+            </Modal>
         </div>
     )
 }
