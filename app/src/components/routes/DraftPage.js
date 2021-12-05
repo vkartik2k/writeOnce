@@ -11,7 +11,7 @@ import lock from '../../assets/lock.png'
 import save from '../../assets/save.svg'
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
-import { Modal } from '@mui/material';
+import { drawerClasses, Modal } from '@mui/material';
 import SignCertificateModal from '../SignCertificateModal';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -118,6 +118,7 @@ const formats = [
 function DraftPage(props) {
     const [title, setTitle] = useState('');
     const [value, setValue] = useState('');
+    const [dataDraft, setDataDraft] = useState({});
     const [isValid, setIsValid] = useState('false');
     const [isLoading, setIsLoading] = useState('true');
     const user= useContext(UserContext)
@@ -157,6 +158,7 @@ function DraftPage(props) {
                 if(docSnap.data().author===user.uid) {
                     setTitle(docSnap.data().title)
                     setValue(docSnap.data().text)
+                    setDataDraft(docSnap.data())
                     setIsValid(true)
                 }
                 else {
@@ -184,9 +186,9 @@ function DraftPage(props) {
         if(isValid) {
             const docRef = doc(db, 'drafts', params.id);
             setDoc(docRef, {
+                ...dataDraft,
                 text: value,
                 title: title,
-                author: user.uid
             }).then(() => {
                 console.log('Changes saved!')
                 handleClick()
@@ -223,7 +225,7 @@ function DraftPage(props) {
                 aria-describedby="modal-modal-description"
             >
                 <div style={styles.box}>
-                    <SignCertificateModal/>
+                    <SignCertificateModal data={dataDraft} id={params.id} setData = {setDataDraft}/>
                 </div>
             </Modal>
         </div>
