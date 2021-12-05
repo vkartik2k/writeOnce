@@ -30,12 +30,12 @@ app.post("/encrypt", (req,res)=>{
     let sign = ""
     signedBy.forEach(element => {
         if(element.isSigned === true) {
-            sign += element.name + " (" + element.email + ");"
+            sign += element.email + "; "
         }
     });
 
     let mark = `<div style="color: #707070"> Created on: ${datetime}
-    Signed By: ${sign.slice(0, sign.length-1)}
+    Signed By: ${sign.slice(0, sign.length-2)}
 
     Your unique certificate id is #${id}
     Digital Certificate by WriteOnce

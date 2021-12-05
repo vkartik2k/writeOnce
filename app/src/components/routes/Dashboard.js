@@ -34,12 +34,12 @@ const styles = {
 
 function Dashboard() {
   const [data, setData] = useState({});
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const user = useContext(UserContext);
   const navigate = useNavigate();
 
   const loadData = async () => {
-    setLoading(true);
+    setLoading(false);
     const docRef = doc(db, 'profiles', user.uid);
     
     let docSnap = await getDoc(docRef);
@@ -87,7 +87,12 @@ function Dashboard() {
                 addDoc(collection(db, "drafts"), ({
                     title: "Untitled Draft",
                     text: "",
-                    author: user.uid
+                    author: user.uid,
+                    signedBy: [{
+                      email: user.email,
+                      isSigned: false
+                    }]
+                    
                 }))
                 .then(docRef =>{
                     console.log("Document written with ID: ", docRef.id);
@@ -105,7 +110,8 @@ function Dashboard() {
                     console.error("Error adding document: ", error);
                 })
             }}/>
-          {!loading && data.draftData.map((draft, i) => (<Link to={`/draft/${draft.id}`} style={{ textDecoration: 'none' }}><DraftCard title={draft.title} text={draft.text} key={i}/></Link>))}
+            {console.log("Yo", data.draftData)}
+          {!loading && data.draftData && data.draftData.map((draft, i) => (<Link to={`/draft/${draft.id}`} style={{ textDecoration: 'none' }}><DraftCard title={draft.title} text={draft.text} key={i}/></Link>))}
         </div>
         <span style={styles.title}>My Digital Certificates</span>
         <div style={styles.flexContainer}>

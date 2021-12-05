@@ -52,6 +52,7 @@ function App() {
   return (
     <Router>
       <UserContext.Provider value={user}>
+        {console.log(user)}
         <LoginContext.Provider value={{logIn: signInWithGoogle, logOut}}>
           <div className="App">
             <Routes>

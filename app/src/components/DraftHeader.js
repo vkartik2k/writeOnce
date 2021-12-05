@@ -73,8 +73,6 @@ function DraftHeader({title, changeTitle, saveChanges}) {
                 />
             </div>
             <div style={styles.userAvatar}>
-                <div style={styles.btn} onClick={saveChanges}>Save Changes</div>
-
                 <GoogleLogin user={user} logIn={loginMethod.logIn} logOut={loginMethod.logOut}/>    
             </div>
         </div>

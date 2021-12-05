@@ -8,9 +8,11 @@ import DraftHeader from '../DraftHeader';
 import { UserContext } from '../../App';
 import Loading from '../Loading';
 import lock from '../../assets/lock.png'
+import save from '../../assets/save.svg'
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
 import { Modal } from '@mui/material';
+import SignCertificateModal from '../SignCertificateModal';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
     return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -39,11 +41,13 @@ const styles = {
         top:'60px',
         zIndex: '99'
     },
-    mainBtn: {
+    mainBtnContainer : {
         position: 'fixed',
         bottom: '15px',
         right: '15px',
         zIndex: '98',
+    },
+    mainBtn: {
         backgroundColor:'#fbbc04',
         borderRadius: '4px',
         padding:'12px',
@@ -52,7 +56,21 @@ const styles = {
         color: 'black',
         cursor: 'pointer',
         boxShadow: '0px 0px 5px 1px rgba(0,0,0,0.23)',
-        fontSize: '17px'
+        fontSize: '17px',
+        display: 'inline-block'
+    },
+    saveBtn: {
+        backgroundColor:'#1976d2',
+        borderRadius: '4px',
+        padding:'12px',
+        fontWeight: '600',
+        fontFamily: `'Source Sans Pro', serif`,
+        color: 'white',
+        cursor: 'pointer',
+        boxShadow: '0px 0px 5px 1px rgba(0,0,0,0.23)',
+        fontSize: '17px',
+        display: 'inline-block',
+        marginRight: '10px'
     },
     lock: {
         display: 'inline-block',
@@ -64,12 +82,13 @@ const styles = {
         top: '50%',
         left: '50%',
         transform: 'translate(-50%, -50%)',
-        width: 400,
+        width: 600,
         backgroundColor: 'white',
         border: '0px',
         padding: '20px',
         zIndex: 100,
-        borderRadius: '10px'
+        borderRadius: '10px',
+        textAlign: 'center'
     }
 }
 
@@ -133,6 +152,7 @@ function DraftPage(props) {
         
         const startTime = Date.now()
         getDoc(docRef).then(docSnap => {
+
             if(docSnap.exists()) {
                 if(docSnap.data().author===user.uid) {
                     setTitle(docSnap.data().title)
@@ -140,6 +160,8 @@ function DraftPage(props) {
                     setIsValid(true)
                 }
                 else {
+                    console.log(user.uid)
+                    console.log("Access")
                     setTitle("Access Denied!")
                 }
                 console.log(Date.now()-startTime)
@@ -149,7 +171,7 @@ function DraftPage(props) {
                 console.log("No Such Draft Exists")
             }
         })
-    }, [])
+    }, [user])
 
     const handleClick = () => setSnackOpen(true);
 
@@ -175,7 +197,11 @@ function DraftPage(props) {
     return (
         <div style={styles.container}>
             {isLoading && <Loading/>}
-            <div style={styles.mainBtn} onClick={() => setModalOpen(true)}> <img style={styles.lock} src={lock} alt="lock" height='15px'/>Generate Certificate</div>
+            <div style={styles.mainBtnContainer}>
+                <div style={styles.saveBtn} onClick={saveChanges}> <img style={styles.lock} src={save} alt="lock" height='15px'/>Save Changes</div>
+                <div style={styles.mainBtn} onClick={() => setModalOpen(true)}> <img style={styles.lock} src={lock} alt="lock" height='15px'/>Sign Certificate</div>
+
+            </div>
             <DraftHeader title={title} changeTitle={setTitle} saveChanges={saveChanges}/>
             <ReactQuill 
                 theme="snow" 
@@ -197,7 +223,7 @@ function DraftPage(props) {
                 aria-describedby="modal-modal-description"
             >
                 <div style={styles.box}>
-                    Hello
+                    <SignCertificateModal/>
                 </div>
             </Modal>
         </div>
