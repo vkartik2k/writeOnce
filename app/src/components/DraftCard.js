@@ -8,6 +8,7 @@ const styles = {
         width: '190px',
         margin: '10px',
         cursor: 'pointer',
+        color: 'black'
     },
     containerHovered: {
         boxShadow: '0px 0px 5px 1px rgba(0,0,0,0.15)',
@@ -52,7 +53,7 @@ function DraftCard({title, text}) {
             onMouseLeave={()=>setHover(false)}
         >
             <div style={styles.upper}>
-                {text}
+                {text.slice(0, 100) + (text&&"...")}
             </div>
             <div style={styles.lower}>
                 <div style={styles.imgContainer}>

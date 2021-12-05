@@ -1,0 +1,18 @@
+.titleInput{
+    text-align: center;
+    background-color: transparent;
+    border: 0px;
+    font-family: 'Source Sans Pro', sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    padding: 2px;
+    padding-left: 8px;
+    padding-right: 8px;
+
+}
+
+.titleInput:focus {
+    background-color: white;
+    display: inline-block;
+    border-radius: 5px;
+}

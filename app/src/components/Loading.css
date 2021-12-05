@@ -1,0 +1,44 @@
+.line{
+    height: 3px;
+    width: 100%;
+    background: #e8e8e8;
+    margin-top: 40px;
+    
+  }
+  .inner{
+    width: 100%;
+    height: inherit;
+    background: linear-gradient(to right, #F5482A, #F534A6, #C230EB, #AF7CEA, #9AB1B5, #7BDF7D );
+    animation: slide 2s ease-in-out infinite;
+  }
+  
+  @keyframes slide{
+    0%{
+      transform-origin: left;
+      transform: scalex(0.3);
+    }
+    25%{
+      transform-origin: left;
+      transform: scalex(1);
+    }
+    26%{
+      transform-origin: right;
+      transform: scalex(1);
+    }
+    50%{
+      transform-origin: right;
+      transform: scalex(0.3);
+    }
+    75%{
+      transform-origin: right;
+      transform: scalex(1);
+    }
+    76%{
+      transform-origin: left;
+      transform: scalex(1);
+    }
+    100%{
+      transform-origin: left;
+      transform: scalex(0.3);
+    }
+  }

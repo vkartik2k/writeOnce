@@ -14,7 +14,7 @@ const styles = {
         position: 'sticky',
         top: '0px',
         width: '100%',
-        zIndex: '100',
+        zIndex: '90',
     },
     logo: {
         paddingLeft: '20px',
@@ -45,7 +45,7 @@ function CertificateHeader({title, changeTitle}) {
     return (
         <div style={styles.container}>
             <div style={styles.logo}>
-                <Link to="/dashboard">
+                <Link to="/dashboard" style={{ textDecoration: 'none' }}>
                     <img src={logo} alt="Hey" height="45px"/>&nbsp;&nbsp;
                     <img src={logo_extended} alt="" height="45px"/>
                 </Link>

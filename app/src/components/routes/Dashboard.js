@@ -1,12 +1,15 @@
 import React, { useContext, useEffect, useState } from 'react'
 import { db } from '../../firebase-config'
-import { doc, getDoc, setDoc } from "firebase/firestore"; 
+import { doc, getDoc, setDoc, addDoc, collection } from "firebase/firestore"; 
 import MainHeader from '../MainHeader'
 import Notice from '../Notice'
 import NewDraft from '../NewDraft'
 import DraftCard from '../DraftCard'
 import CertificateCard from '../CertificateCard'
 import { UserContext } from '../../App';
+import { useNavigate } from 'react-router';
+import { Link } from 'react-router-dom';
+import Loading from '../Loading';
 
 const styles = {
   main: {
@@ -33,6 +36,7 @@ function Dashboard() {
   const [data, setData] = useState({});
   const [loading, setLoading] = useState(true);
   const user = useContext(UserContext);
+  const navigate = useNavigate();
 
   const loadData = async () => {
     setLoading(true);
@@ -44,7 +48,7 @@ function Dashboard() {
       currData.draftData = []
       currData.drafts.forEach(async (element, i) => {
         let snap = await getDoc(element)
-        currData.draftData.push(snap.data())
+        currData.draftData.push({...snap.data(), id:element.id})
         if(i===currData.drafts.length - 1) {
           setData(currData)
           setLoading(false)
@@ -73,13 +77,35 @@ function Dashboard() {
 
   return (
     <div>
+      { loading && (<Loading/>)} 
       <MainHeader/>
       <Notice/>
       <div style={styles.main}>
         <span style={styles.title}>My Drafts</span>
         <div style={styles.flexContainer}>
-          <NewDraft/>
-          {!loading && data.draftData.map((draft, i) => (<DraftCard title={draft.title} text={draft.text} key={i}/>))}
+          <NewDraft click={()=>{
+                addDoc(collection(db, "drafts"), ({
+                    title: "Untitled Draft",
+                    text: "",
+                    author: user.uid
+                }))
+                .then(docRef =>{
+                    console.log("Document written with ID: ", docRef.id);
+
+                    getDoc(doc(db, 'profiles', user.uid)).then(snap => {
+                      let copy = snap.data();
+                      copy.drafts.push(docRef)
+                      setDoc(doc(db, 'profiles', user.uid), copy).then(() => {
+                        console.log("Inserted into the user")
+                      })
+                    })
+                    navigate(`/draft/${docRef.id}`)
+                })
+                .catch(error =>{
+                    console.error("Error adding document: ", error);
+                })
+            }}/>
+          {!loading && data.draftData.map((draft, i) => (<Link to={`/draft/${draft.id}`} style={{ textDecoration: 'none' }}><DraftCard title={draft.title} text={draft.text} key={i}/></Link>))}
         </div>
         <span style={styles.title}>My Digital Certificates</span>
         <div style={styles.flexContainer}>

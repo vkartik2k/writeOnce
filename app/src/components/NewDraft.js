@@ -1,8 +1,4 @@
 import React, { useState } from 'react'
-import { db } from '../firebase-config'
-import { useNavigate } from 'react-router-dom';
-import {collection, addDoc} from 'firebase/firestore'
-
 
 const styles = {
     container: {
@@ -28,27 +24,13 @@ const styles = {
 
 export default function NewDraft(props) {
     const [hover, setHover] = useState(false)
-    const navigate = useNavigate();
 
     return (
         <div 
             style={{...styles.container, ...(hover? styles.containerHovered: {})}}
             onMouseEnter={()=>setHover(true)}
             onMouseLeave={()=>setHover(false)}
-            onClick={()=>{
-                console.log(props)
-                addDoc(collection(db, "drafts"), ({
-                    title: "Untitled Draft",
-                    text: ""
-                }))
-                .then(docRef =>{
-                    console.log("Document written with ID: ", docRef.id);
-                    navigate(`/draft/${docRef.id}`)
-                })
-                .catch(error =>{
-                    console.error("Error adding document: ", error);
-                })
-            }}
+            onClick = {props.click}
         >
             <div style={styles.width100}>
                 <img src="certificate.svg" alt="" height="50px"/>

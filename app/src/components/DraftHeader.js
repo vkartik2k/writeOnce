@@ -1,9 +1,10 @@
-import React, { useContext } from 'react'
+import React, {useContext} from 'react'
 import { LoginContext, UserContext } from '../App'
-import GoogleLogin from './GoogleLogin'
+import GoogleLogin from './GoogleLogin';
 import logo from '../assets/logo.png'
 import logo_extended from '../assets/logo_extended.svg'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import './DraftHeader.css'
 
 const styles = {
     container: {
@@ -13,7 +14,8 @@ const styles = {
         backgroundColor: '#EFEFEF',
         position: 'sticky',
         top: '0px',
-        width: '100%'
+        width: '100%',
+        zIndex: '90',
     },
     logo: {
         paddingLeft: '20px',
@@ -31,23 +33,24 @@ const styles = {
     round: {
         borderRadius : '50%'
     },
-    search : {
-        border: '0px',
-        padding: '10px',
-        fontSize: '19px',
-        minWidth: '500px',
-        borderRadius: '10px',
-        paddingLeft: '50px',
-        marginLeft: '-20px',
-        backgroundColor: 'white',
+    title: {
+        fontSize: '22px',
+        fontWeight: '600'
     },
-    searchImg: {
-        position: 'relative',
-        left:'13px'
-    }
+    btn: {
+        display: 'inline-block',
+        marginLeft: '10px',
+        cursor: 'pointer',
+        padding: '5px',
+        border: '2px solid black',
+        borderRadius: '7px',
+        textAlign: 'center',
+        fontWeight: '600',
+        fontSize: '18px',
+    },
 }
 
-function MainHeader() {
+function DraftHeader({title, changeTitle, saveChanges}) {
     const user = useContext(UserContext);
     const loginMethod = useContext(LoginContext); 
 
@@ -55,22 +58,27 @@ function MainHeader() {
         <div style={styles.container}>
             <div style={styles.logo}>
                 <Link to="/dashboard" style={{ textDecoration: 'none' }}>
-                    <img src={logo} alt="" height="45px"/>&nbsp;&nbsp;
+                    <img src={logo} alt="Hey" height="45px"/>&nbsp;&nbsp;
                     <img src={logo_extended} alt="" height="45px"/>
                 </Link>
             </div>
-            <div>
-                <img src="search.png" alt="" width='15px' style={styles.searchImg}/>
+            <div style={styles.title}>
                 <input 
-                    style={styles.search}
-                    placeholder="Search"
+                    placeholder="Add title here"
+                    value={title}
+                    onChange={(e) => {
+                        changeTitle(e.target.value)
+                    }}
+                    className="titleInput"
                 />
             </div>
             <div style={styles.userAvatar}>
-                <GoogleLogin user={user} logIn={loginMethod.logIn} logOut={loginMethod.logOut}/>
+                <div style={styles.btn} onClick={saveChanges}>Save Changes</div>
+
+                <GoogleLogin user={user} logIn={loginMethod.logIn} logOut={loginMethod.logOut}/>    
             </div>
         </div>
     )
 }
 
-export default MainHeader
+export default DraftHeader

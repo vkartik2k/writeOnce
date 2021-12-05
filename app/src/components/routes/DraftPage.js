@@ -1,10 +1,20 @@
-import React, { useEffect, useState } from 'react'
-import CertificateHeader from '../CertificateHeader'
+import React, { useContext, useEffect, useState } from 'react'
 import { db } from '../../firebase-config'
 import { doc, getDoc, setDoc } from "firebase/firestore"; 
 import ReactQuill from 'react-quill';
 import 'react-quill/dist/quill.snow.css';
 import { useParams } from 'react-router';
+import DraftHeader from '../DraftHeader';
+import { UserContext } from '../../App';
+import Loading from '../Loading';
+import lock from '../../assets/lock.png'
+import ConvertDraftModal from '../modals/ConvertDraftModal';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const styles = {
     container: {
@@ -20,13 +30,34 @@ const styles = {
         boxShadow: '0px 2px 5px 2px rgba(0,0,0,0.36)',
         padding: '70px',
         fontFamily: 'Courier New',
+        zIndex: '80'
     },
     toolbar: {
         backgroundColor: '#EFEFEF',
         textAlign: 'center',
         position: 'sticky',
         top:'60px',
-        zIndex: '100'
+        zIndex: '99'
+    },
+    mainBtn: {
+        position: 'fixed',
+        bottom: '15px',
+        right: '15px',
+        zIndex: '98',
+        backgroundColor:'#fbbc04',
+        borderRadius: '4px',
+        padding:'12px',
+        fontWeight: '600',
+        fontFamily: `'Source Sans Pro', serif`,
+        color: 'black',
+        cursor: 'pointer',
+        boxShadow: '0px 0px 5px 1px rgba(0,0,0,0.23)',
+        fontSize: '17px'
+    },
+    lock: {
+        display: 'inline-block',
+        paddingRight: '5px',
+        paddingTop:'2px'
     }
 }
 
@@ -57,7 +88,10 @@ function DraftPage(props) {
     const [title, setTitle] = useState('');
     const [value, setValue] = useState('');
     const [isValid, setIsValid] = useState('false');
+    const [isLoading, setIsLoading] = useState('true');
+    const user= useContext(UserContext)
     const params = useParams();
+    const [open, setOpen] = useState(false);
 
     // for Styling
     useEffect(()=> {
@@ -81,15 +115,22 @@ function DraftPage(props) {
     // for loading
     useEffect(()=> {
         setIsValid(false);
+        setIsLoading(true);
         const docRef = doc(db, 'drafts', params.id);
         
         const startTime = Date.now()
         getDoc(docRef).then(docSnap => {
             if(docSnap.exists()) {
-                setTitle(docSnap.data().title)
-                setValue(docSnap.data().text)
-                setIsValid(true)
+                if(docSnap.data().author===user.uid) {
+                    setTitle(docSnap.data().title)
+                    setValue(docSnap.data().text)
+                    setIsValid(true)
+                }
+                else {
+                    setTitle("Access Denied!")
+                }
                 console.log(Date.now()-startTime)
+                setIsLoading(false);
             }
             else {
                 console.log("No Such Draft Exists")
@@ -97,9 +138,35 @@ function DraftPage(props) {
         })
     }, [])
 
+    const handleClick = () => setOpen(true);
+
+    
+    const handleClose = (event, reason) => {
+    if (reason === 'clickaway') return;
+    setOpen(false);
+    }
+
+    const saveChanges = () => {
+        if(isValid) {
+            const docRef = doc(db, 'drafts', params.id);
+            setDoc(docRef, {
+                text: value,
+                title: title,
+                author: user.uid
+            }).then(() => {
+                console.log('Changes saved!')
+                handleClick()
+
+            })
+        }
+    }
+
     return (
         <div style={styles.container}>
-            <CertificateHeader title={title} changeTitle={setTitle}/>
+            {/* <ConvertDraftModal/> */}
+            {isLoading && <Loading/>}
+            <div style={styles.mainBtn}> <img style={styles.lock} src={lock} alt="lock" height='15px'/>Generate Certificate</div>
+            <DraftHeader title={title} changeTitle={setTitle} saveChanges={saveChanges}/>
             <ReactQuill 
                 theme="snow" 
                 value={value} 
@@ -107,6 +174,11 @@ function DraftPage(props) {
                 modules={modules}
                 formats={formats}
             />
+            <Snackbar open={open} autoHideDuration={4000} onClose={handleClose}>
+                <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+                    Changes saved on cloud!
+                </Alert>
+            </Snackbar>
         </div>
     )
 }
