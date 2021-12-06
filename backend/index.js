@@ -17,10 +17,9 @@ const private_key = fs.readFileSync('keys/privateKey.pem', 'utf-8');
 app.post("/encrypt", (req,res)=>{
     let doc = req.body.text
     let signedBy = req.body.signedBy
-    let id = req.body.id
 
-    var currentdate = new Date(); 
-    var datetime =  currentdate.getDate() + "/"
+    let currentdate = new Date(); 
+    let Datetime =  currentdate.getDate() + "/"
                     + (currentdate.getMonth()+1)  + "/" 
                     + currentdate.getFullYear() + " "  
                     + currentdate.getHours() + ":"  
@@ -34,10 +33,9 @@ app.post("/encrypt", (req,res)=>{
         }
     });
 
-    let mark = `<div style="color: #707070"> Created on: ${datetime}
+    let mark = `<div style="color: #707070"> Created on: ${Datetime}
     Signed By: ${sign.slice(0, sign.length-2)}
 
-    Your unique certificate id is #${id}
     Digital Certificate by WriteOnce
     <br/>
     </div>
@@ -51,7 +49,9 @@ app.post("/encrypt", (req,res)=>{
     console.log('Digital Signature: ', signature);
     res.send({
         text: doc,
-        signature: signature
+        signature: signature,
+        signedBy: signedBy,
+        timestamp: Datetime
     })
 })
 

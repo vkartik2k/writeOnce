@@ -50,7 +50,7 @@ const styles = {
     },
 }
 
-function DraftHeader({title, changeTitle, saveChanges}) {
+function DraftHeader({title, changeTitle, saveChanges, setDraft}) {
     const user = useContext(UserContext);
     const loginMethod = useContext(LoginContext); 
 
@@ -68,6 +68,9 @@ function DraftHeader({title, changeTitle, saveChanges}) {
                     value={title}
                     onChange={(e) => {
                         changeTitle(e.target.value)
+                        setDraft(data => {
+                            return {...data, title: e.target.value}
+                        })
                     }}
                     className="titleInput"
                 />

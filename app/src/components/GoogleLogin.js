@@ -49,7 +49,6 @@ function GoogleLogin({user, logIn, logOut}) {
             {user? (<div style={styles.flexContainer}>
                 <Button variant="contained" onClick={logOut}>Log Out</Button>
                 <div>
-                    {console.log(user.photoURL)}
                     <img src={user.photoURL} alt="Yo" height="35px" style={styles.round}/>
                 </div>
             </div>    

@@ -34,33 +34,41 @@ const styles = {
 
 function Dashboard() {
   const [data, setData] = useState({});
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const user = useContext(UserContext);
   const navigate = useNavigate();
 
   const loadData = async () => {
-    setLoading(false);
+    setLoading(true);
     const docRef = doc(db, 'profiles', user.uid);
     
     let docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       let currData = docSnap.data();
       currData.draftData = []
+      currData.certificateData = []
       currData.drafts.forEach(async (element, i) => {
         let snap = await getDoc(element)
         currData.draftData.push({...snap.data(), id:element.id})
-        if(i===currData.drafts.length - 1) {
+      });
+      currData.certificates.forEach(async (element, i) => {
+        let snap = await getDoc(element)
+        currData.certificateData.push({...snap.data(), id:element.id})
+        if(i===currData.certificates.length - 1) {
           setData(currData)
-          setLoading(false)
+          console.log("Yo bro")
         }
       });
+
+      setLoading(false)
     } else {
       console.log("No such document!");
       setDoc(docRef, {
         drafts: [],
-        cerficates: [],
+        certificates: [],
         sharedDrafts: [],
-        sharedCertificates: []
+        sharedCertificates: [],
+        email: user.email
       }).then(() => {
         console.log("Created profile for user")
         loadData()
@@ -73,8 +81,7 @@ function Dashboard() {
       loadData()
     }
   }, [user])
-
-
+  
   return (
     <div>
       { loading && (<Loading/>)} 
@@ -110,7 +117,6 @@ function Dashboard() {
                     console.error("Error adding document: ", error);
                 })
             }}/>
-            {console.log("Yo", data.draftData)}
           {!loading && data.draftData && data.draftData.map((draft, i) => (<Link to={`/draft/${draft.id}`} style={{ textDecoration: 'none' }}><DraftCard title={draft.title} text={draft.text} key={i}/></Link>))}
         </div>
         <span style={styles.title}>My Digital Certificates</span>

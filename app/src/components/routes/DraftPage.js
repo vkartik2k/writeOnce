@@ -119,13 +119,21 @@ function DraftPage(props) {
     const [title, setTitle] = useState('');
     const [value, setValue] = useState('');
     const [dataDraft, setDataDraft] = useState({});
-    const [isValid, setIsValid] = useState('false');
-    const [isLoading, setIsLoading] = useState('true');
+    const [isValid, setIsValid] = useState(false);
+    const [access, setAccess] = useState(false);
+    const [isLoading, setIsLoading] = useState(true);
     const user= useContext(UserContext)
     const params = useParams();
     const [snackOpen, setSnackOpen] = useState(false);
     const [modalOpen, setModalOpen] = useState(false);
 
+
+    useEffect(() => {
+        setDataDraft(data=> {
+            return {...data, text: value}
+        })
+        console.log(value, dataDraft)
+    }, [value])
     // for Styling
     useEffect(()=> {
         document.getElementsByClassName('ql-container')[0].style.height = styles.editor.height
@@ -155,16 +163,27 @@ function DraftPage(props) {
         getDoc(docRef).then(docSnap => {
 
             if(docSnap.exists()) {
+                let flag = false;
+                docSnap.data().signedBy.forEach((element) => {
+                    if(element.email===user.email) flag = true;
+                })
                 if(docSnap.data().author===user.uid) {
                     setTitle(docSnap.data().title)
                     setValue(docSnap.data().text)
                     setDataDraft(docSnap.data())
                     setIsValid(true)
+                    setAccess(true)
+                }
+                else if(flag) {
+                    setTitle(docSnap.data().title)
+                    setValue(docSnap.data().text)
+                    setDataDraft(docSnap.data())
+                    setAccess(true)
                 }
                 else {
-                    console.log(user.uid)
                     console.log("Access")
                     setTitle("Access Denied!")
+                    setAccess(false)
                 }
                 console.log(Date.now()-startTime)
                 setIsLoading(false);
@@ -200,11 +219,11 @@ function DraftPage(props) {
         <div style={styles.container}>
             {isLoading && <Loading/>}
             <div style={styles.mainBtnContainer}>
-                <div style={styles.saveBtn} onClick={saveChanges}> <img style={styles.lock} src={save} alt="lock" height='15px'/>Save Changes</div>
-                <div style={styles.mainBtn} onClick={() => setModalOpen(true)}> <img style={styles.lock} src={lock} alt="lock" height='15px'/>Sign Certificate</div>
+                {isValid&&(<div style={styles.saveBtn} onClick={saveChanges}> <img style={styles.lock} src={save} alt="lock" height='15px'/>Save Changes</div>)}
+                {access&&<div style={styles.mainBtn} onClick={() => setModalOpen(true)}> <img style={styles.lock} src={lock} alt="lock" height='15px'/>Sign Certificate</div>}
 
             </div>
-            <DraftHeader title={title} changeTitle={setTitle} saveChanges={saveChanges}/>
+            <DraftHeader title={title} changeTitle={setTitle} saveChanges={saveChanges} setDraft = {setDataDraft}/>
             <ReactQuill 
                 theme="snow" 
                 value={value} 
@@ -225,7 +244,7 @@ function DraftPage(props) {
                 aria-describedby="modal-modal-description"
             >
                 <div style={styles.box}>
-                    <SignCertificateModal data={dataDraft} id={params.id} setData = {setDataDraft}/>
+                    <SignCertificateModal data={dataDraft} id={params.id} setData = {setDataDraft} access={isValid}/>
                 </div>
             </Modal>
         </div>
