@@ -1,5 +1,6 @@
 import React from 'react'
 import Notice from './Notice'
+import ReactHtmlParser from 'react-html-parser'
 
 const styles = {
     page: {
@@ -17,30 +18,11 @@ const styles = {
     }
 }
 
-function Doc() {
+function Doc(props) {
     return (
         <div style={styles.page}>
             <Notice/>
-            <span style={styles.signature}>
-                <br/>
-                Created on: 17/07/2021 2:07pm<br/>
-                Signed By: Kartik Verma (kartikv@gmail.com); Nikhil Sharma (sharma@gmail.com)<br/>
-                <br/>
-                Your unique certificate id is #23231580<br/>
-                <br/>
-                Digital Certificate by WriteOnce
-                <br/>
-                <br/>
-            </span>
-
-            <span>
-                Hello this is a digital certificate created for checking purpose
-                <br/>
-                <br/>
-                Kartik Verma,<br/>
-                Co-founder,<br/>
-                WriteOnce App
-            </span>
+            {ReactHtmlParser(props.html)}
         </div>
     )
 }

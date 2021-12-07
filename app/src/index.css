@@ -20,6 +20,10 @@ input {
   font-family: 'Source Sans Pro', sans-serif;
 }
 
+p {
+  margin: 0px;
+}
+
 /* width */
 ::-webkit-scrollbar {
   width: 6px;

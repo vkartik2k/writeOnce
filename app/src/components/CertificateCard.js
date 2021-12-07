@@ -8,6 +8,7 @@ const styles = {
         width: '190px',
         margin: '10px',
         cursor: 'pointer',
+        color: 'black'
     },
     containerHovered: {
         boxShadow: '0px 0px 5px 1px rgba(0,0,0,0.15)',
@@ -41,7 +42,7 @@ const styles = {
     }
 }
 
-function CertificateCard(props) {
+function CertificateCard({title, text, timestamp}) {
     const [hover, setHover] = useState(false)
 
     return (
@@ -51,16 +52,16 @@ function CertificateCard(props) {
             onMouseLeave={()=>setHover(false)}
         >
             <div style={styles.upper}>
-                Hello world, the text from the certificate will come out over here
+                {text && text.replace( /(<([^>]+)>)/ig, '').slice(0, 150) + (text&&"...")}
             </div>
             <div style={styles.lower}>
                 <div style={styles.imgContainer}>
                     <img src="certificate.svg" alt="" height="28px"/>
                 </div>
                 <div>
-                    <div style={styles.titleText}>Share Holder Certificate
+                    <div style={styles.titleText}>{title}
                     </div>
-                    <div style={styles.timestamp}>22/07/2021 21:03pm</div>
+                    <div style={styles.timestamp}>{timestamp}</div>
                 </div>
             </div>
         </div>

@@ -35,7 +35,7 @@ function App() {
             <Routes>
               <Route exact path='/' element={<LandingPage/>}></Route>
               <Route exact path='/dashboard' element={user? <Dashboard/>: <Navigate to="/"/> }></Route>
-              <Route exact path='/certificate' element={user? <DigitalCertificate/> :<Navigate to="/"/>}></Route>
+              <Route exact path='/certificate/:id' element={user? <DigitalCertificate/> :<Navigate to="/"/>}></Route>
               <Route exact path='/draft/:id' element={user ?<DraftPage/>: <Navigate to="/"/>}></Route>
             </Routes>
           </div>

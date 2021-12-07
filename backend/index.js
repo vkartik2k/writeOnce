@@ -33,12 +33,13 @@ app.post("/encrypt", (req,res)=>{
         }
     });
 
-    let mark = `<div style="color: #707070"> Created on: ${Datetime}
-    Signed By: ${sign.slice(0, sign.length-2)}
+    let mark = `<div style="color: #707070"> Created on: ${Datetime}<br/>
+    Signed By: ${sign.slice(0, sign.length-2)}<br/>
+    <br/>
 
     Digital Certificate by WriteOnce
-    <br/>
     </div>
+    <br/><br/>
     `
     doc = mark + doc
 

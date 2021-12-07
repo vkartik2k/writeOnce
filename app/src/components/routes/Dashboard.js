@@ -52,15 +52,16 @@ function Dashboard() {
         currData.draftData.push({...snap.data(), id:element.id})
       });
       currData.certificates.forEach(async (element, i) => {
+        if(i===0)setLoading(true)
         let snap = await getDoc(element)
         currData.certificateData.push({...snap.data(), id:element.id})
         if(i===currData.certificates.length - 1) {
           setData(currData)
-          console.log("Yo bro")
+          setLoading(false)
         }
       });
-
       setLoading(false)
+      
     } else {
       console.log("No such document!");
       setDoc(docRef, {
@@ -121,12 +122,7 @@ function Dashboard() {
         </div>
         <span style={styles.title}>My Digital Certificates</span>
         <div style={styles.flexContainer}>
-          <CertificateCard/>
-          <CertificateCard/>
-          <CertificateCard/>
-          <CertificateCard/>
-          <CertificateCard/>
-          <CertificateCard/>
+          {!loading && data.certificateData && data.certificateData.map((c, i) => (<Link to={`/certificate/${c.id}`} style={{ textDecoration: 'none' }}><CertificateCard title={c.title} text={c.text} timestamp={c.timestamp} key={i}/></Link>))}
         </div>
       </div>
     </div>
