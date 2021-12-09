@@ -39,3 +39,12 @@ p {
   background: rgba(0, 0, 0, 0.596);
   border-radius: 6px;
 }
+
+.ql-font-Roboto {
+  font-family: "Roboto" !important;
+}
+
+.digitalCertificate img{
+  max-width: 100%;
+  text-align: center;
+}

@@ -32,7 +32,7 @@ function DigitalCertificate(props) {
     }, [])
 
     return (
-        <div style={styles.container}>
+        <div style={styles.container} class="digitalCertificate">
             {isLoading && <Loading/>}
             <CertificateHeader title={certificateData.title}/>
             <Doc html={certificateData.text}/>

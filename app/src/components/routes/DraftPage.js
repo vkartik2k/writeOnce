@@ -92,9 +92,14 @@ const styles = {
     }
 }
 
+const Quill = ReactQuill.Quill
+var Font = Quill.import('formats/font');
+Font.whitelist = ['Roboto'];
+Quill.register(Font, true);
+
 const modules = {
     toolbar: [
-        [{ 'header': '1'}, {'header': '2'}, { 'font': [] }],
+        [{ 'header': '1'}, {'header': '2'}, { 'font':  Font.whitelist }],
         [{size: []}],
         ['bold', 'italic', 'underline', 'strike', 'blockquote'],
         [{'list': 'ordered'}, {'list': 'bullet'}, 

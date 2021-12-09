@@ -52,7 +52,7 @@ function Dashboard() {
         currData.draftData.push({...snap.data(), id:element.id})
       });
       currData.certificates.forEach(async (element, i) => {
-        if(i===0)setLoading(true)
+        if(i===0) setLoading(true)
         let snap = await getDoc(element)
         currData.certificateData.push({...snap.data(), id:element.id})
         if(i===currData.certificates.length - 1) {
@@ -60,13 +60,13 @@ function Dashboard() {
           setLoading(false)
         }
       });
-      setLoading(false)
+      if(!currData.certificates.length) setLoading(false)
       
     } else {
       console.log("No such document!");
       setDoc(docRef, {
         drafts: [],
-        certificates: [],
+        certificates: [doc(db, 'certificates', 'bxpKFhte1NxSkGebkqel')],
         sharedDrafts: [],
         sharedCertificates: [],
         email: user.email

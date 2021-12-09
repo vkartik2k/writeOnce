@@ -45,6 +45,12 @@ const styles = {
 function CertificateCard({title, text, timestamp}) {
     const [hover, setHover] = useState(false)
 
+    let arr = text.split(`    Digital Certificate by WriteOnce
+    </div>
+    <br/><br/>`)
+
+    text = arr[1]
+
     return (
         <div 
             style={{...styles.container, ...(hover? styles.containerHovered: {})}}
